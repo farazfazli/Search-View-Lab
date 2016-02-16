@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 /**
  * Created by drewmahrt on 12/28/15.
@@ -139,5 +140,19 @@ public class ShoppingSQLiteOpenHelper extends SQLiteOpenHelper{
         } finally {
             reader.close();
         }
+    }
+
+    public Cursor searchGroceries(String query) {
+        SQLiteDatabase db = getReadableDatabase();
+        String selection = "";
+        for (int i = 1; i < SHOPPING_COLUMNS.length; i++) {
+            selection += SHOPPING_COLUMNS[i] + " LIKE ?";
+            if (i < SHOPPING_COLUMNS.length - 1) {
+                selection += " OR ";
+            }
+        }
+        Log.i(TAG, Arrays.toString(SHOPPING_COLUMNS));
+        String[] selectionArgs = {"%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%"};
+        return db.query(SHOPPING_LIST_TABLE_NAME, SHOPPING_COLUMNS, selection, selectionArgs, null, null, null);
     }
 }
